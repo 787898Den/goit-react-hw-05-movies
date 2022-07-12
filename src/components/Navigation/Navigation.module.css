@@ -1,0 +1,36 @@
+.nav{
+  margin-bottom: 25px;
+}
+.nav_item {
+    display: inline-block;
+    text-decoration: none;
+    padding: 10px;
+    font-weight: 500;
+    font-size: 18px;
+    color: white;
+    line-height: 1.17;
+  }
+  
+  .active {
+    composes: nav_item;
+    color: red;
+  }
+
+.nav_list{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+.item{
+    border-radius: 10px;
+    background-color: rgb(113, 169, 176);
+    text-decoration: none;
+    color: white;
+    font-weight: 500;
+    
+}
+
+.item:not(:last-child){
+    margin-right: 30px;
+}
