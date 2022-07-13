@@ -1,8 +1,9 @@
 import React, {  useEffect, useState } from "react";
 import { toast } from 'react-toastify';
-import { Link,useSearchParams} from "react-router-dom";
+import { useSearchParams} from "react-router-dom";
 import {getMovieByQuery} from '../../Service/Api';
 import Searchbar from "components/SearchBar/SearchBar";
+import { MovieList } from "components/FilmList/FilmList";
 
 export const MoviesPage = () =>{
     const [query, setQuery] = useState('');
@@ -27,34 +28,23 @@ export const MoviesPage = () =>{
 
   const onSubmitForm = e => {
     e.preventDefault();
-    if (query.trim() === '') {
+    if (query === 0) {
       toast.error('Please, enter the text');
       return;
     }
-    setSearchParams({ query: query.trim() });
+    setSearchParams({ query: query});
   };
-  const handelInputChange = e => {
-    const text = e.currentTarget.value.toLowerCase();
+  const handelChange = e => {
+    const text = e.currentTarget.value.toLowerCase().trim();
     setQuery(text);
   };
 
 
     return(
         <>
-            <Searchbar onSubmit={onSubmitForm} onChange={handelInputChange}/>
-            {movies&&(
-            <ul>
-                {movies.map(movie=>(
-                    <li key={movie.id}>
-                        <Link to={`/movies/${movie.id}`}>
-                            {movie.title}
-                        </Link>
-                    </li>
-                ))}
-            </ul> 
-            )}
-        </>
-                
+         <Searchbar onSubmit={onSubmitForm} onChange={handelChange}/>
+            <MovieList movies={movies} />
+        </>        
     );
     
 }

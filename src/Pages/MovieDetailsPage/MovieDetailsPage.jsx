@@ -1,72 +1,64 @@
-import React, { useEffect, useState } from "react";
-import { Link, useParams, Outlet, useNavigate, useLocation} from "react-router-dom";
+import React, { useEffect, useState, useRef } from "react";
+import { Link, useParams, Outlet, useLocation} from "react-router-dom";
 import {getMovieDetails} from '../../Service/Api';
-
-import styles from '../MovieDetailsPage/MovieDetailsPage.module.css';
+import { getGenres } from "Service/getGenres";
+import { BackLink } from "components/LinkBack/LinkBack";
+// import styles from '../MovieDetailsPage/MovieDetailsPage.module.css';
+import defaultImg from '../../images/Unknown Profile Picture Png.png';
+import { Description, Genres, OverviewText,Overview, Title, Userscore, Wrapper,Image, Thumb } from "./MovieDetailsPage.styled";
 
 export const MovieDetailsPage = () => {
-    const location = useLocation();
-    const history = useNavigate();
-    const { movieId } = useParams();
-    const [title, setTitle] = useState('');
-    const [overview, setOverview] = useState('');
-    const [date, setDate] = useState('');
-    const [genres, setGenres] = useState('');
-    const [poster, setPoster] = useState('');
-    const [userScore, setUserScore] = useState('');
-       
-    const goBack = ()=> {
-        history(location.state);
-         
-    };
-   
-    function createListOfGenres (genres){
-        const genresList = [];
-        genres.map(genre=>{
-            genresList.push(genre.name);
-            return genresList;
-        })
-        
-        const genreString = genresList.join(" ");
-        return genreString;
-    }
 
-    useEffect(()=>{
-            getMovieDetails(movieId).then(data=>{
-            setPoster(`https://image.tmdb.org/t/p/w500${data.poster_path}`);
-            setTitle(data.original_title);
-            setOverview(data.overview);
-            setDate(data.release_date.slice(0, 4));
-            setGenres(createListOfGenres(data.genres));
-            setUserScore(data.vote_average);
-        });
-    },[movieId]);
+    const [movie, setMovie] = useState([]);
+    const { movieId } = useParams();
+    const { title, poster_path, popularity, overview, genres } = movie;
+
+    useEffect(() => {
+        getMovieDetails(movieId)
+          .then(data => {
+            if (data.length !== 0) {
+              return setMovie(data);
+            }
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      }, [movieId]);
+
+    const location = useLocation();
+    const goBack = location.state?.from ?? '/';
+    const search = useRef(location.state?.from?.search);
    
     return(
         <div>
-        <button  className={styles.button} type="button" onClick={goBack}>Go back</button>
-        <div className={styles.movieCard}>
-            <img src={poster} alt={title} className={styles.movieCard_img}></img>
+        <BackLink href={goBack} />
+        <Wrapper>
+            <Image src={poster_path
+                  ? `https://image.tmdb.org/t/p/w500${poster_path}`
+                  : defaultImg} alt={title} />
 
-            <div className={styles.movieCard_info}>
-                <h1 className={styles.title}>{title} ({date})</h1>
-                <p className={styles.score}>User Score: {userScore}</p>
-                <h2>Overview</h2>
-                <p>{overview}</p>
-                <h3 className={styles.genres__title}>Genres</h3>
-                <p className={styles.genres}>{genres}</p>
-            </div>
-        </div>
+            <Thumb >
+                <Title>{title}</Title>
+                <Userscore>User Score:{Math.floor(popularity)}%</Userscore>
+                <Overview>Overview</Overview>
+                <OverviewText>{overview}</OverviewText>
+                <Genres>Genres</Genres>
+                <Genres>{getGenres(genres)}</Genres>
+            </Thumb>
+        </Wrapper>
         
-        <h1 className={styles.title}>Additional information</h1>
-        <div className={styles.movieCard_link}>
-            <Link to={`/movies/${ movieId }/cast` } state={location.state}>Cast</Link>
-            <Link to={`/movies/${ movieId }/reviews`} state={location.state}>Reviews</Link>
-        </div>
-        
+        <Title >Additional information</Title>
+        <Description>
+            <Link to="cast"
+                  state={{
+                   from: search.current ? `/movies${search.current}` : '/',
+                }}>Cast</Link>
+            <Link to="reviews"
+                  state={{
+                    from: search.current ? `/movies${search.current}` : '/',
+                }}>Reviews</Link>
+        </Description>
         <Outlet />
-        </div>
-                
+        </div>        
     );
-    
 }

@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Link, useLocation} from "react-router-dom";
+import { useLocation} from "react-router-dom";
 import {getTrendingMovies} from '../../Service/Api';
-
-import styles from '../HomePage/HomePage.module.css';
+import { StyleLink, Thumb, Title} from '../HomePage/HomePage.styled';
 
 export const HomePage = () => {
     const location = useLocation();
@@ -13,15 +12,15 @@ export const HomePage = () => {
 
     return(
         <>
-        <h1 className={styles.title}>Trending today</h1>
+        <Title>Trending today</Title>
             {movies&&(
-            <ul className={styles.list}>
+            <Thumb>
                 {movies.map(movie=>(
                     <li key={movie.id}>
-                        <Link  className={styles.link} to={`/movies/${movie.id}`} state={location}>{movie.title}</Link>
+                        <StyleLink to={`/movies/${movie.id}`} state={location}>{movie.title}</StyleLink>
                     </li>
                 ))}
-            </ul> 
+            </Thumb> 
             )}
         </>
                 
