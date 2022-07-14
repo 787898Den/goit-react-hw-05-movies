@@ -3,11 +3,11 @@ import { Link } from 'react-router-dom';
 
 export const Item = styled(Link)`
   font-size: 16px;
+  text-decoration:none;
   color:rgba(237, 55, 0, 0.822)
 `;
 
 export const List = styled.ul`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+  list-style:square;
+  color:rgba(237, 55, 0, 0.822)
 `;

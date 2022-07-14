@@ -3,7 +3,6 @@ import { Link, useParams, Outlet, useLocation} from "react-router-dom";
 import {getMovieDetails} from '../../Service/Api';
 import { getGenres } from "Service/getGenres";
 import { BackLink } from "components/LinkBack/LinkBack";
-// import styles from '../MovieDetailsPage/MovieDetailsPage.module.css';
 import defaultImg from '../../images/Unknown Profile Picture Png.png';
 import { Description, Genres, OverviewText,Overview, Title, Userscore, Wrapper,Image, Thumb } from "./MovieDetailsPage.styled";
 

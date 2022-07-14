@@ -21,17 +21,18 @@ export const MoviesPage = () =>{
           setSearchParams({});
           return;
         }
-        setMovies(data);
+        setMovies(data.results);
       })
       .catch(error => console.error(error));
   }, [currentFilm, setSearchParams]);
 
   const onSubmitForm = e => {
     e.preventDefault();
-    if (query === 0) {
-      toast.error('Please, enter the text');
+    if (!query) {
+      toast.error('Please, enter text');
       return;
     }
+
     setSearchParams({ query: query});
   };
   const handelChange = e => {
