@@ -1,8 +1,7 @@
 import React  from 'react';
-import { Suspense,lazy } from "react";
 import { Route, Routes } from 'react-router-dom';
+import { Suspense,lazy } from "react";
 import { Navigation } from '../components/Navigation/Navigation';
-
 //lazy imports
 const HomePage = lazy(() =>
   import('../Pages/HomePage/HomePage').then(module => ({ default: module.HomePage }))
@@ -29,11 +28,18 @@ const Cast = lazy(() =>
   }))
 );
 
+const NotFoundPage = lazy(() => 
+ import('../Pages/NotFoundPage/NotFoundPage').then(module => ({ 
+  default: module.NotFound,
+}))
+);
+
+
 export const App = () => {
       
-    return (
-      <Suspense fallback ={<div>LOADING</div>}>
-      <Routes>
+  return (
+    <Suspense fallback ={<div>LOADING</div>}>
+        <Routes>
         <Route path="/" element={<Navigation />}>
           <Route index element={<HomePage />} />
           <Route path="movies" element={<MoviesPage />} />
@@ -41,10 +47,10 @@ export const App = () => {
             <Route path="cast" element={<Cast />} />
             <Route path="reviews" element={<Reviews />} />
           </Route>
+          <Route path="*" element={<NotFoundPage to="/" />} />
         </Route>
-        <Route path="*" element={<Navigation to="/" />} />
       </Routes>
-      </Suspense>
-    ); 
+    </Suspense>
+  ); 
   
-};
+}
